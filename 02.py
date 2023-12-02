@@ -7,7 +7,6 @@ from pathlib import Path
 from tools import readfile
 
 MAX_CUBES = {"red": 12, "green": 13, "blue": 14}
-MIN_CUBES = {"red": 12, "green": 13, "blue": 14}
 
 
 def get_max_cubes(line: str) -> tuple[int, dict[str, int]]:
@@ -43,16 +42,25 @@ def p1(contents: list[str]) -> int:
 
 
 def p2(contents: list[str]) -> int:
-    ...
+    games = dict(get_max_cubes(line) for line in contents)
+
+    mincubes_prod = []
+
+    for game, mincubes in games.items():
+        prod = mincubes["red"] * mincubes["green"] * mincubes["blue"]
+        print(game, mincubes, prod)
+        mincubes_prod.append(prod)
+
+    return sum(mincubes_prod)
 
 
 if __name__ == "__main__":
     import sys
 
-    if sys.argv[1] == "sample":
-        fp = Path("samples/02-1.txt")
-
     fp = Path("inputs/02.txt")
+
+    # if sys.argv[1] == "sample":
+    #     fp = Path("samples/02-1.txt")
 
     contents = readfile(fp)
 
