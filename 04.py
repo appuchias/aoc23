@@ -6,6 +6,8 @@ from pathlib import Path
 
 from tools import readfile
 
+Card = tuple[list[int], list[int]]
+
 
 def get_winning_numbers(line: str) -> list[int]:
     winners_str, _ = line.split("|")
@@ -23,8 +25,8 @@ def get_my_numbers(line: str) -> list[int]:
     return my_numbers
 
 
-def points_for_game(game: tuple[list[int], list[int]]) -> int:
-    winners, my_numbers = game
+def points_for_card(card: Card) -> int:
+    winners, my_numbers = card
     points = 0
 
     for number in my_numbers:
@@ -42,9 +44,9 @@ def p1(contents: list[str]) -> int:
     winners = [get_winning_numbers(line) for line in contents]
     my_numbers = [get_my_numbers(line) for line in contents]
 
-    games = list(zip(winners, my_numbers))
+    cards = list(zip(winners, my_numbers))
 
-    all_points = [points_for_game(game) for game in games]
+    all_points = [points_for_card(card) for card in cards]
 
     return sum(all_points)
 
@@ -52,34 +54,37 @@ def p1(contents: list[str]) -> int:
 def p2(contents: list[str]) -> int:
     winners = [get_winning_numbers(line) for line in contents]
     my_numbers = [get_my_numbers(line) for line in contents]
+    base_cards = dict(
+        zip(range(1, len(my_numbers) + 1), list(zip(winners, my_numbers)))
+    )
+    # Diccionario: {id: (winners, my_numbers)}
 
-    games = list(zip(winners, my_numbers))
-    games = dict(zip(range(1, len(games) + 1), games))
-    # Diccionario id: (winners, my_numbers)
+    card_count = 0
+    cards = list(base_cards.keys())
 
-    game_count = 0
-    new_games = list(games.keys())
+    while len(cards) > 1:
+        cards_to_add = list()
+        for card_id in cards:
+            cards.remove(card_id)
+            card_count += 1
 
-    while len(new_games) > 1:
-        for game_id in new_games.copy():
-            new_games.remove(game_id)
-            game_count += 1
-
-            numbers = games[game_id]
-
-            points = points_for_game(numbers)
+            points = points_for_card(base_cards[card_id])
 
             if points:
-                new_game_ids = range(game_id + 1, game_id + points + 1)
-                new_game_ids = filter(lambda x: x <= len(games), new_game_ids)
-                new_games.extend(new_game_ids)
+                new_game_ids = range(card_id + 1, card_id + points + 1)
+                new_game_ids = filter(lambda x: x <= len(base_cards), new_game_ids)
+                cards_to_add.extend(new_game_ids)
 
-    return game_count
+        cards.extend(cards_to_add)
+
+        # print(" ", card_count, len(cards))
+
+    return card_count
 
 
 if __name__ == "__main__":
     fp = Path("inputs/04.txt")
-    # fp = Path("samples/04-1.txt")
+    fp = Path("samples/04-1.txt")
 
     contents = readfile(fp)
 
