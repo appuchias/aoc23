@@ -17,15 +17,15 @@ def p2(contents: list[str]) -> int:
     ...
 
 
-if __name__ == "__main__":
-    fp = Path("inputs/$1.txt")
-    fp = Path("samples/$1-1.txt")
+if __name__ == \"__main__\":
+    fp = Path(\"inputs/$1.txt\")
+    fp = Path(\"samples/$1-1.txt\")
     
     contents = readfile(fp)
 
     print(p1(contents))
     print(p2(contents))
-" > $1.py
+" >$1.py
 
 chmod +x $1.py
 
