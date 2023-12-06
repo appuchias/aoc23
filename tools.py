@@ -13,6 +13,8 @@ class Point:
     y: int
 
     def get_neighbors(self) -> list["Point"]:
+        """Get the 4 adjacent points to this point."""
+
         return [
             Point(self.x - 1, self.y),
             Point(self.x + 1, self.y),
@@ -21,6 +23,8 @@ class Point:
         ]
 
     def get_surronding(self) -> list["Point"]:
+        """Get all the points surrounding this point, including diagonals."""
+
         return self.get_neighbors() + [
             Point(self.x - 1, self.y - 1),
             Point(self.x + 1, self.y - 1),
