@@ -25,6 +25,7 @@ def distance_travelled(time_available: int, time_held: int) -> int:
 def p1(contents: list[str]) -> int:
     races = parse_input(contents)
 
+    # Iterate through every race and find the number of ways to beat the record
     race_ways_to_win = list()
     for time, record_distance in races:
         ways_to_win = 0
@@ -51,6 +52,9 @@ def p2(contents: list[str]) -> int:
     for held in range(time + 1):
         if distance_travelled(time, held) > record_distance:
             ways_to_win += 1
+        else:  # Winning is no longer possible (distance goes down after peak)
+            if ways_to_win > 0:
+                break
 
     return ways_to_win
 
@@ -62,4 +66,4 @@ if __name__ == "__main__":
     contents = readfile(fp)
 
     print(p1(contents))  # 131376
-    print(p2(contents))
+    print(p2(contents))  # 34123437
