@@ -42,7 +42,17 @@ def p1(contents: list[str]) -> int:
 
 
 def p2(contents: list[str]) -> int:
-    ...
+    races = parse_input(contents)
+
+    time = int("".join([str(t) for t, d in races]))
+    record_distance = int("".join([str(d) for t, d in races]))
+
+    ways_to_win = 0
+    for held in range(time + 1):
+        if distance_travelled(time, held) > record_distance:
+            ways_to_win += 1
+
+    return ways_to_win
 
 
 if __name__ == "__main__":
