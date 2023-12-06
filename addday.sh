@@ -25,7 +25,7 @@ if __name__ == \"__main__\":
 
     print(p1(contents))
     print(p2(contents))
-" >$1.py
+" >> $1.py
 
 chmod +x $1.py
 
