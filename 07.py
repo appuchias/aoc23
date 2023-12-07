@@ -45,31 +45,29 @@ def value_hand(hand: Hand) -> int:
     cards = sorted(hand.cards, key=lambda x: hand.cards.count(x), reverse=True)
     unique_cards = list(dict.fromkeys(cards))
     unique = len(unique_cards)
+    most_repeated = unique_cards[0]
 
-    for distinct in unique_cards:
-        # Flush
-        if hand.cards.count(distinct) == 5:
-            hand.value = 6
-        # Four of a kind
-        elif hand.cards.count(distinct) == 4:
-            hand.value = 5
-        # Full house
-        elif hand.cards.count(distinct) == 3 and unique == 2:
-            hand.value = 4
-        # Three of a kind
-        elif hand.cards.count(distinct) == 3 and unique > 2:
-            hand.value = 3
-        # Two pairs
-        elif hand.cards.count(distinct) == 2 and unique == 3:
-            hand.value = 2
-        # One pair
-        elif hand.cards.count(distinct) == 2 and unique == 4:
-            hand.value = 1
-        # High card
-        else:
-            hand.value = 0
-
-        break
+    # Flush
+    if hand.cards.count(most_repeated) == 5:
+        hand.value = 6
+    # Four of a kind
+    elif hand.cards.count(most_repeated) == 4:
+        hand.value = 5
+    # Full house
+    elif hand.cards.count(most_repeated) == 3 and unique == 2:
+        hand.value = 4
+    # Three of a kind
+    elif hand.cards.count(most_repeated) == 3 and unique > 2:
+        hand.value = 3
+    # Two pairs
+    elif hand.cards.count(most_repeated) == 2 and unique == 3:
+        hand.value = 2
+    # One pair
+    elif hand.cards.count(most_repeated) == 2 and unique == 4:
+        hand.value = 1
+    # High card
+    else:
+        hand.value = 0
 
     return hand.value
 
