@@ -3,6 +3,7 @@
 # Advent of Code 23 - Day 09
 
 from pathlib import Path
+from typing import Callable
 
 from tools import readfile
 
@@ -22,27 +23,30 @@ def find_bd(history: list[int]) -> list[int]:
     return bd
 
 
+def get_prediction(history: list[int], op: Callable) -> int:
+    bds = list()
+    last_seq = history
+
+    # find the backward differences
+    while any(last_seq):
+        last_seq = find_bd(last_seq)
+        bds.append(last_seq)
+    bds.pop()  # remove the last one, which is all 0s
+
+    # operate through each bd to get the prediction
+    val_to_add = 0
+    for bd in reversed(bds):
+        val_to_add = op(bd, val_to_add)
+
+    return op(history, val_to_add)
+
+
 def p1(contents: list[str]) -> int:
     histories = parse_input(contents)
 
     predictions = list()
     for history in histories:
-        bds = list()
-        last_seq = history
-
-        # find all the backward differences
-        while any(last_seq):
-            last_seq = find_bd(last_seq)
-            bds.append(last_seq)
-
-        bds.pop()  # remove the last one, which is all 0s
-
-        # add up the last values of each bd to get the prediction
-        val_to_add = 0
-        for bd in reversed(bds):
-            val_to_add += bd[-1]
-
-        predictions.append(history[-1] + val_to_add)
+        predictions.append(get_prediction(history, lambda x, y: x[-1] + y))
 
     return sum(predictions)
 
@@ -52,23 +56,7 @@ def p2(contents: list[str]) -> int:
 
     predictions = list()
     for history in histories:
-        bds = list()
-        last_seq = history
-
-        # find all the backward differences
-        while any(last_seq):
-            last_seq = find_bd(last_seq)
-            bds.append(last_seq)
-
-        bds.pop()  # remove the last one, which is all 0s
-
-        # add up the last values of each bd to get the prediction
-        val_to_rm = 0
-        for bd in reversed(bds):
-            val_to_rm = bd[0] - val_to_rm
-
-        prediction = history[0] - val_to_rm
-        predictions.append(prediction)
+        predictions.append(get_prediction(history, lambda x, y: x[0] - y))
 
     return sum(predictions)
 
