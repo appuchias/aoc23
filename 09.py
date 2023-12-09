@@ -48,7 +48,29 @@ def p1(contents: list[str]) -> int:
 
 
 def p2(contents: list[str]) -> int:
-    ...
+    histories = parse_input(contents)
+
+    predictions = list()
+    for history in histories:
+        bds = list()
+        last_seq = history
+
+        # find all the backward differences
+        while any(last_seq):
+            last_seq = find_bd(last_seq)
+            bds.append(last_seq)
+
+        bds.pop()  # remove the last one, which is all 0s
+
+        # add up the last values of each bd to get the prediction
+        val_to_rm = 0
+        for bd in reversed(bds):
+            val_to_rm = bd[0] - val_to_rm
+
+        prediction = history[0] - val_to_rm
+        predictions.append(prediction)
+
+    return sum(predictions)
 
 
 if __name__ == "__main__":
@@ -58,4 +80,4 @@ if __name__ == "__main__":
     contents = readfile(fp)
 
     print(p1(contents))  # x=2101499000
-    print(p2(contents))
+    print(p2(contents))  # x=1089
